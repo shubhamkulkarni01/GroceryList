@@ -8,6 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -46,10 +54,36 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
     public ListInfo[] buildLists() {
-        ListInfo[] lists = new ListInfo[3];
+        ListInfo[] lists = null;/*
         lists[0] = new ListInfo("Groceries", 100);
         lists[1] = new ListInfo("Home Appliances", 10);
-        lists[2] = new ListInfo("test", 1);
+        lists[2] = new ListInfo("test", 1);*/
+        try {
+            JSONArray array = new JSONArray(open(new FileInputStream(new File(getFilesDir(), "GroceryLists.json"))));
+            lists = new ListInfo[array.length()];
+        }
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+            lists=new ListInfo[0];
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         return lists;
+    }
+
+    protected String open(InputStream inputStream) {
+        String json_trial = null;
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = br.readLine()) != null) sb.append(line).append("\n");
+            json_trial = sb.toString();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return json_trial;
     }
 }

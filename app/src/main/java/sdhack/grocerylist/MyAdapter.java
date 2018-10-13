@@ -21,15 +21,15 @@ public class MyAdapter extends RecyclerView.Adapter <MyAdapter.MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.grocery_list_overview, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.grocery_list_overview, viewGroup, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder viewHolder, int i) {
         viewHolder.name.setText(lists[i].name);
-        viewHolder.itemCount.setText(""+lists[i].itemCount);
-        if(lists[i].dateModfied != null)
+        viewHolder.itemCount.setText("" + lists[i].itemCount);
+        if (lists[i].dateModfied != null)
             viewHolder.lastModified.setText(lists[i].dateModfied);
         else
             viewHolder.lastModified.setText("No Date Modified!");
@@ -40,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter <MyAdapter.MyViewHolder> {
         return lists.length;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder{
         TextView name, itemCount, lastModified;
         public MyViewHolder(View itemView) {
             super(itemView);

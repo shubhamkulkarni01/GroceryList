@@ -1,10 +1,10 @@
 package sdhack.grocerylist;
-
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 
 import com.camerakit.CameraKitView;
+
+import sdhack.grocerylist.R;
 
 
 public class Camera extends AppCompatActivity {
@@ -16,36 +16,37 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         cameraKitView = findViewById(R.id.camera);
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        cameraKitView.onStart();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        cameraKitView.onResume();
-    }
+        @Override
+        protected void onStart () {
+            super.onStart();
+            cameraKitView.onStart();
+        }
 
-    @Override
-    protected void onPause() {
-        cameraKitView.onPause();
-        super.onPause();
-    }
+        @Override
+        protected void onResume () {
+            super.onResume();
+            cameraKitView.onResume();
+        }
 
-    @Override
-    protected void onStop() {
-        cameraKitView.onStop();
-        super.onStop();
-    }
+        @Override
+        protected void onPause () {
+            cameraKitView.onPause();
+            super.onPause();
+        }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        cameraKitView.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-       
+        @Override
+        protected void onStop () {
+            cameraKitView.onStop();
+            super.onStop();
+        }
+
+        @Override
+        public void onRequestPermissionsResult ( int requestCode, String[] permissions,
+        int[] grantResults){
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            cameraKitView.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
     }

@@ -9,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:keepScreenOn="true"   <!-- keep screen awake while CameraKitView is active -->
-    app:camera_flash="auto"
-    app:camera_facing="back"
-    app:camera_focus="continuous"
-    app:camera_permissions="camera" />
+        android:keepScreenOn="true"></com.camerakit.CameraKitView> <!-- keep screen awake while CameraKitView is active -->
+        app:camera_flash="auto"
+        app:camera_facing="back"
+        app:camera_focus="continuous"
+        app:camera_permissions="camera" />
 
 </RelativeLayout>

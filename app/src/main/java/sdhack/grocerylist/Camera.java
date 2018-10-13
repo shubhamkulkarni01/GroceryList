@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 
+import com.camerakit.CameraKitView;
+
+
 public class Camera extends AppCompatActivity {
 
     private CameraKitView cameraKitView;
@@ -13,7 +16,7 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         cameraKitView = findViewById(R.id.camera);
-    }
+
 
     @Override
     protected void onStart() {

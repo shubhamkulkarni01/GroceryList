@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_my_icon"
+        android:src="@drawable/common_google_signin_btn_icon_light"
         android:layout_margin="16dp" />
 
 </LinearLayout>

@@ -2,10 +2,7 @@ package sdhack.grocerylist;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.camerakit.CameraKitView;
-
-import sdhack.grocerylist.R;
-
+import com.camerakit.*;
 
 public class Camera extends AppCompatActivity {
 
@@ -14,7 +11,7 @@ public class Camera extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera);
         cameraKitView = findViewById(R.id.camera);
     }
 

@@ -5,6 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 public class MyAdapter extends RecyclerView.Adapter {
+
+    GroceryList groceryList;
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

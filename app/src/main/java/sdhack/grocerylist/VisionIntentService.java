@@ -1,12 +1,23 @@
 package sdhack.grocerylist;
 
-public class VisionIntentService {
+import android.app.IntentService;
+import android.content.Intent;
 
-    VisionIntentService visionBuilder = new VisionIntentService(
-            new NetHttpTransport(),
-            new AndroidJsonFactory(),
-            null);
+public class VisionIntentService implements IntentService {
 
-visionBuilder.setVisionRequestInitializer(
-        new VisionIntentService("AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0"NetHttpTransport netHttpTransport, AndroidJsonFactory androidJsonFactory, Object o));
+
+
+
+    @Override
+    protected void onHandleIntent(@androidx.annotation.Nullable Intent intent) {
+
+        VisionIntentService visionBuilder = new VisionIntentService(
+                new NetHttpTransport(),
+                new AndroidJsonFactory(),
+                null);
+
+        new VisionIntentService("AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0", netHttpTransport, AndroidJsonFactory androidJsonFactory, Object o);
+        visionBuilder.setVisionRequestInitializer();
+        );
+    }
 }

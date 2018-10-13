@@ -3,9 +3,13 @@ package sdhack.grocerylist;
 import android.app.IntentService;
 import android.content.Intent;
 
-public class VisionIntentService implements IntentService {
+public class VisionIntentService extends IntentService {
+
+    public VisionIntentService(String name) {
+        super("Vision Intent Service");
+    }
 
     @Override
-    protected void onHandleIntent(@androidx.annotation.Nullable Intent intent) {
+    protected void onHandleIntent(Intent intent) {
     }
 }

@@ -4,19 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextureView
-        android:id="@+id/texture_view"
+    <com.camerakit.CameraKitView
+        android:id="@+id/camera"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_take_photo"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"
-        android:src="@drawable/ic_camera"
-        app:backgroundTint="@color/colorPrimary" />
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:keepScreenOn="true"   <!-- keep screen awake while CameraKitView is active -->
+    app:camera_flash="auto"
+    app:camera_facing="back"
+    app:camera_focus="continuous"
+    app:camera_permissions="camera" />
 
 </RelativeLayout>

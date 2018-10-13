@@ -3,8 +3,14 @@ package sdhack.grocerylist;
 import java.util.Date;
 
 public class GroceryItem {
-    String name;
-    double price;
-    Date previousPurchase, predicted;
-    boolean prediction = false;
+
+    public String name;
+    public double price;
+    public Date previousPurchase, predicted;
+    public boolean prediction = false;
+
+    public GroceryItem(String name, double price){
+        this.name = name;
+        this.price = price;
+    }
 }

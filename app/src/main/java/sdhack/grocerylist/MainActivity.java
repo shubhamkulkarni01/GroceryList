@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        //mAdapter = new MyAdapter(myDataset);
+        ListInfo[] lists = buildLists();
+        mAdapter = new MyAdapter(lists);
         mRecyclerView.setAdapter(mAdapter);
     }
-
-
-
-
-
+    public ListInfo[] buildLists() {
+        ListInfo[] lists = new ListInfo[3];
+        lists[0] = new ListInfo("Groceries", 100);
+        lists[1] = new ListInfo("Home Appliances", 10);
+        lists[2] = new ListInfo("test", 1);
+        return lists;
+    }
 }

@@ -37,6 +37,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         if(list.get(i).previousPurchase != null) viewHolder.date.setText(list.get(i).previousPurchase.toString());
     }
 
+
     class ListViewHolder extends RecyclerView.ViewHolder{
         CheckBox checkbox;
         TextView name, price, date, quantity;

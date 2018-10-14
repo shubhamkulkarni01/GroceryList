@@ -36,12 +36,14 @@ public class MainActivity extends AppCompatActivity implements Serializable, Com
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton fab;
 
+    private GroceryList list;
+
     private ArrayList<String> description = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GroceryList lists = buildLists();
+        list = buildLists();
         Log.i("class", "mainactivity");
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.my_recycler_view);
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Com
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new ListAdapter(lists);
+        mAdapter = new ListAdapter(list);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -149,9 +151,10 @@ public class MainActivity extends AppCompatActivity implements Serializable, Com
                     description.add(annotation.getDescription());
             Intent intent = new Intent(this, DescriptionSelectActivity.class);
             intent.putExtra("array",description);
+            intent.putExtra("reply", this);
         }
         if(result == 1){
-
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

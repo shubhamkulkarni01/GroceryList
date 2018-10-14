@@ -8,17 +8,19 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class BasicAdapter extends RecyclerView.Adapter<BasicViewHolder> {
+public class BasicAdapter extends RecyclerView.Adapter<BasicAdapter.BasicViewHolder> {
 
     ArrayList<String> array;
+    Communicator communicator;
 
     @Override
     public int getItemCount() {
         return array.size();
     }
 
-    public BasicAdapter(ArrayList<String> description) {
+    public BasicAdapter(ArrayList<String> description, Communicator communicator) {
         super();
+        this.communicator=communicator;
         array = description;
     }
 
@@ -32,17 +34,17 @@ public class BasicAdapter extends RecyclerView.Adapter<BasicViewHolder> {
     public void onBindViewHolder(@NonNull BasicViewHolder basicViewHolder, int i) {
         basicViewHolder.t.setText(array.get(i));
     }
-}
-class BasicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    TextView t;
-    public BasicViewHolder(@NonNull View itemView) {
-        super(itemView);
-        t = (TextView) itemView;
-        t.setOnClickListener(this);
-    }
+    class BasicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView t;
+        public BasicViewHolder(@NonNull View itemView) {
+            super(itemView);
+            t = (TextView) itemView;
+            t.setOnClickListener(this);
+        }
 
-    @Override
-    public void onClick(View v) {
-
+        @Override
+        public void onClick(View v) {
+            communicator.sendResult(((TextView)v).getText(), 0);
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -33,16 +34,17 @@ import java.util.Scanner;
 
 import static android.content.ContentValues.TAG;
 
-public class VisionIntentService extends IntentService {
+public class VisionIntentService extends IntentService{
     public VisionIntentService(String name) {
         super(name);
     }
+    private TextView mImageDetails;
 
     private static final String TARGET_URL =
             "https://vision.googleapis.com/v1/images:annotate?";
     private static final String API_KEY =
             "key=AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0";
-    private static final String CLOUD_VISION_API_KEY = BuildConfig."AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0";
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0";
 
     @Override
     protected void onHandleIntent( Intent intent) {
@@ -89,7 +91,7 @@ public class VisionIntentService extends IntentService {
     }
 
 
-    private Vision.Images.Annotate prepareAnnotationRequest(Bitmap bitmap) throws IOException {
+    private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
@@ -140,10 +142,10 @@ public class VisionIntentService extends IntentService {
     }
 
     private static class LableDetectionTask extends AsyncTask<Object, Void, String> {
-        private final MainActivity mActivityWeakReference;
+        private final VisionIntentService mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
 
-        LableDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
+        LableDetectionTask(VisionIntentService activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = activity;
             mRequest = annotate;
         }
@@ -165,7 +167,7 @@ public class VisionIntentService extends IntentService {
         }
 
         protected void onPostExecute(String result) {
-            MainActivity activity = mActivityWeakReference;
+            VisionIntentService activity = mActivityWeakReference;
             if (activity != null && !activity.isFinishing()) {
                 TextView imageDetail = activity.findViewById(R.id.image_details);
                 imageDetail.setText(result);

@@ -42,11 +42,14 @@ public class VisionIntentService extends IntentService{
 
     private Bitmap bitmap = null;
 
+    Communicator m;
+
     @Override
     protected void onHandleIntent( Intent intent) {
         Log.i("IMAGE", "an image has arrived");
 
         bitmap = intent.getParcelableExtra("IMAGE");
+        m = (Communicator)intent.getSerializableExtra("reply");
         callCloudVision(bitmap);
 
         /*
@@ -145,6 +148,7 @@ public class VisionIntentService extends IntentService{
             try {
                 Log.d(TAG, "created Cloud Vision request object, sending request");
                 response = prepareAnnotationRequest(bitmap).execute();
+
                 Log.d(TAG, response.getResponses().get(0).getLabelAnnotations().toString());
                 return "Success";
             } catch (GoogleJsonResponseException e) {

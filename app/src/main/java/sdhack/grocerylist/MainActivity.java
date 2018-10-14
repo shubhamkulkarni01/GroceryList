@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements Serializable {
+public class MainActivity extends AppCompatActivity implements Serializable, Communicator {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -140,10 +140,21 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         return json_trial;
     }
 
-    public void sendResult(BatchAnnotateImagesResponse response){
-        description = new ArrayList<>();
-        for(int i = 0; i<response.getResponses().size(); i++)
-            for(EntityAnnotation annotation:response.getResponses().get(0).getLabelAnnotations())
-                description.add(annotation.getDescription());
+    public void sendResult(Object o, int result){
+        if(result == 0) {
+            BatchAnnotateImagesResponse response = (BatchAnnotateImagesResponse) o;
+            description = new ArrayList<>();
+            for (int i = 0; i < response.getResponses().size(); i++)
+                for (EntityAnnotation annotation : response.getResponses().get(0).getLabelAnnotations())
+                    description.add(annotation.getDescription());
+            Intent intent = new Intent(this, DescriptionSelectActivity.class);
+            intent.putExtra("array",description);
+        }
+        if(result == 1){
+
+        }
     }
+}
+interface Communicator{
+    public void sendResult(Object o, int result);
 }

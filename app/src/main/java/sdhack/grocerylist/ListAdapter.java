@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     GroceryList list;
@@ -28,13 +30,24 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder viewHolder, int i) {
-
+        viewHolder.checkbox.setChecked(false);
+        viewHolder.name.setText(list.get(i).name);
+        viewHolder.quantity.setText(""+list.get(i).quantity);
+        viewHolder.price.setText(""+list.get(i).price);
+        if(list.get(i).previousPurchase != null) viewHolder.date.setText(list.get(i).previousPurchase.toString());
     }
+
     class ListViewHolder extends RecyclerView.ViewHolder{
+        CheckBox checkbox;
+        TextView name, price, date, quantity;
 
         public ListViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            checkbox = itemView.findViewById(R.id.checkbox);
+            name = itemView.findViewById(R.id.name);
+            price = itemView.findViewById(R.id.price);
+            date = itemView.findViewById(R.id.date);
+            quantity = itemView.findViewById(R.id.quantity);
         }
     }
 }

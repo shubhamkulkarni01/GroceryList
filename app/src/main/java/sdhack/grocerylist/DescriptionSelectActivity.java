@@ -14,8 +14,8 @@ public class DescriptionSelectActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RecyclerView recyclerView = new RecyclerView(this);
-        setContentView(recyclerView);
+        setContentView(R.layout.activity_main);
+        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
         communicator = (ResultReceiver) getIntent().getParcelableExtra("reply");
         //Log.d("sdfjlflkdsjfkl", ""+(communicator == null)+" "+communicator.toString());
         recyclerView.setAdapter(new BasicAdapter((ArrayList<String>)getIntent().getSerializableExtra("array"), communicator, this));

@@ -33,7 +33,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         viewHolder.checkbox.setChecked(false);
         viewHolder.name.setText(list.get(i).name);
         viewHolder.quantity.setText("Quantity: "+list.get(i).quantity);
-        viewHolder.price.setText(String.format("$%.2f",+list.get(i).price));
+        if(list.get(i).price>0.01) {
+            viewHolder.price.setText(String.format("$%.2f", +list.get(i).price));
+        }
+        else{
+            viewHolder.price.setText("Cannot get price");
+            viewHolder.price.setTextSize(20);
+        }
         if(list.get(i).previousPurchase != null) viewHolder.date.setText(list.get(i).previousPurchase.toString());
     }
 

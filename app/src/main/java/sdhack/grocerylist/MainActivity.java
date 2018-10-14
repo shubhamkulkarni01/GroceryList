@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, MyR
         try {
             Document document = Jsoup.parse(new URL("https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=" + name), 10000);
             String string = document.select(".a-spacing-none:contains($)").first().toString();
-            return Double.parseDouble(string.substring(string.indexOf("$")+1, string.indexOf(" ",string.indexOf("$"))));
+            return Double.parseDouble(string.substring(string.indexOf("$")+1, string.indexOf(".",string.indexOf("$"))+2));
         }
         catch (Exception e){
             e.printStackTrace();

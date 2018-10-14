@@ -3,7 +3,6 @@ package sdhack.grocerylist;
 import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -29,6 +28,9 @@ public class VisionIntentService extends IntentService{
     public VisionIntentService(String name) {
         super(name);
     }
+    public VisionIntentService(){
+        super("VisionIntentService");
+    }
 
     private BatchAnnotateImagesResponse response = null;
 
@@ -42,10 +44,10 @@ public class VisionIntentService extends IntentService{
 
     @Override
     protected void onHandleIntent( Intent intent) {
+        Log.i("IMAGE", "an image has arrived");
 
-        byte[] bytes = intent.getByteArrayExtra("IMAGE");
-        Bitmap result = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        callCloudVision(result);
+        bitmap = intent.getParcelableExtra("IMAGE");
+        callCloudVision(bitmap);
 
         /*
         try {

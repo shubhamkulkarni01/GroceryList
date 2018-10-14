@@ -1,66 +1,51 @@
 package sdhack.grocerylist;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 
-import com.camerakit.CameraKit;
 import com.camerakit.CameraKitView;
 
-public class Camera extends AppCompatActivity implements View.OnClickListener, CameraKitView.ImageCallback {
+public class Camera extends AppCompatActivity {
 
     private CameraKitView cameraKitView;
     private ImageButton button;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("class", "camera");
+
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
-        cameraKitView = findViewById(R.id.camera);
-        cameraKitView.setFocus(CameraKit.FOCUS_CONTINUOUS);
-        button = findViewById(R.id.imageButton);
-        button.setOnClickListener(this);
+        Log.i("class", "camera");
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            Log.d("started", "the camera");
+            startActivityForResult(takePictureIntent, 1);
+        }
     }
-
-        @Override
-        protected void onStart () {
-            super.onStart();
-            cameraKitView.onStart();
-        }
-
-        @Override
-        protected void onResume () {
-            super.onResume();
-            cameraKitView.onResume();
-        }
-
-        @Override
-        protected void onPause () {
-            cameraKitView.onPause();
-            super.onPause();
-        }
-
-        @Override
-        protected void onStop () {
-            cameraKitView.onStop();
-            super.onStop();
-        }
-
-        @Override
-        public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            cameraKitView.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
 
     @Override
-    public void onClick(View v) {
-        cameraKitView.captureImage(this);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("IMAGE", "we got an image!!");
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Intent intent = new Intent(this, VisionIntentService.class);
+            intent.putExtra("IMAGE", imageBitmap);
+            Log.d("starting service", "starting service!!!");
+            startService(intent);
+        }
     }
-
+/*
     @Override
     public void onImage(CameraKitView cameraKitView, byte[] bytes) {
         // Create a bitmap
@@ -68,5 +53,5 @@ public class Camera extends AppCompatActivity implements View.OnClickListener, C
         Intent intent = new Intent(this, VisionIntentService.class);
         intent.putExtra("IMAGE", bytes);
         startService(intent);
-    }
+    }*/
 }

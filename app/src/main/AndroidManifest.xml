@@ -26,6 +26,7 @@
         <activity android:name=".ListActivity">
 
         </activity>
+        <service android:name=".VisionIntentService"></service>
     </application>
 
 </manifest>

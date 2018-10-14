@@ -1,12 +1,20 @@
 package sdhack.grocerylist;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import org.json.JSONArray;
 
@@ -17,28 +25,42 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Serializable {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton fab;
 
+    private ArrayList<String> description = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GroceryList lists = buildLists();
+        Log.i("class", "mainactivity");
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.my_recycler_view);
         fab = findViewById(R.id.fab);
 
+        if (checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    1);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Camera.class);
-                startActivity(intent);
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    Log.d("started", "the camera");
+                    startActivityForResult(takePictureIntent, 1);
+                }
             }});
 
         // use this setting to improve performance if you know that changes
@@ -51,6 +73,28 @@ public class MainActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         mAdapter = new ListAdapter(lists);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("IMAGE", "we got an image!!");
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Intent intent = new Intent(this, VisionIntentService.class);
+            intent.putExtra("IMAGE", imageBitmap);
+            intent.putExtra("reply", this);
+            Log.d("starting service", "starting service!!!");
+            startService(intent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("class", "mainactivity");
+
     }
 
     public GroceryList buildLists() {
@@ -94,5 +138,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return json_trial;
+    }
+
+    public void sendResult(BatchAnnotateImagesResponse response){
+        description = new ArrayList<>();
+        for(int i = 0; i<response.getResponses().size(); i++)
+            for(EntityAnnotation annotation:response.getResponses().get(0).getLabelAnnotations())
+                description.add(annotation.getDescription());
     }
 }

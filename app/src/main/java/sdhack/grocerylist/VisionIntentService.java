@@ -3,10 +3,8 @@ package sdhack.grocerylist;
 import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -14,7 +12,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.vision.v1.Vision;
-import com.google.api.services.vision.v1.VisionRequest;
 import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
@@ -22,15 +19,9 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import static android.content.ContentValues.TAG;
 
@@ -38,7 +29,8 @@ public class VisionIntentService extends IntentService{
     public VisionIntentService(String name) {
         super(name);
     }
-    private TextView mImageDetails;
+
+    private BatchAnnotateImagesResponse response = null;
 
     private static final String TARGET_URL =
             "https://vision.googleapis.com/v1/images:annotate?";
@@ -46,9 +38,15 @@ public class VisionIntentService extends IntentService{
             "key=AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0";
     private static final String CLOUD_VISION_API_KEY = "AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0";
 
+    private Bitmap bitmap = null;
+
     @Override
     protected void onHandleIntent( Intent intent) {
 
+        byte[] bytes = intent.getByteArrayExtra("IMAGE");
+        Bitmap result = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        callCloudVision(result);
+        /*
         try {
             URL serverUrl = new URL(TARGET_URL + API_KEY);
             URLConnection urlConnection = serverUrl.openConnection();
@@ -84,7 +82,7 @@ public class VisionIntentService extends IntentService{
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
 
@@ -140,23 +138,11 @@ public class VisionIntentService extends IntentService{
 
         return annotateRequest;
     }
-
-    private static class LableDetectionTask extends AsyncTask<Object, Void, String> {
-        private final VisionIntentService mActivityWeakReference;
-        private Vision.Images.Annotate mRequest;
-
-        LableDetectionTask(VisionIntentService activity, Vision.Images.Annotate annotate) {
-            mActivityWeakReference = activity;
-            mRequest = annotate;
-        }
-
-        @Override
-        protected String doInBackground(Object... params) {
+    protected String runRequest(Bitmap bitmap) {
             try {
                 Log.d(TAG, "created Cloud Vision request object, sending request");
-                BatchAnnotateImagesResponse response = mRequest.execute();
+                response = prepareAnnotationRequest(bitmap).execute();
                 return "Success";
-
             } catch (GoogleJsonResponseException e) {
                 Log.d(TAG, "failed to make API request because " + e.getContent());
             } catch (IOException e) {
@@ -166,24 +152,10 @@ public class VisionIntentService extends IntentService{
             return "Cloud Vision API request failed. Check logs for details.";
         }
 
-        protected void onPostExecute(String result) {
-            VisionIntentService activity = mActivityWeakReference;
-            if (activity != null && !activity.isFinishing()) {
-                TextView imageDetail = activity.findViewById(R.id.recycler_view);
-                imageDetail.setText(result);
-            }
-        }
-    }
-
     private void callCloudVision(final Bitmap bitmap) {
-        // Switch text to loading
-        mImageDetails.setText(R.string.loading_message);
-
-        // Do the real work in an async task, because we need to use the network anyway
         try {
-            AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
-            labelDetectionTask.execute();
-        } catch (IOException e) {
+            runRequest(bitmap);
+        } catch (Exception e) {
             Log.d(TAG, "failed to make API request because of other IOException " +
                     e.getMessage());
         }

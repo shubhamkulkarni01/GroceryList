@@ -1,7 +1,5 @@
 package sdhack.grocerylist;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +62,6 @@ public class Camera extends AppCompatActivity implements View.OnClickListener, C
     @Override
     public void onImage(CameraKitView cameraKitView, byte[] bytes) {
         // Create a bitmap
-        Bitmap result = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
     }
 }

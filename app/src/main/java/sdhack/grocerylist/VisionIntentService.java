@@ -18,9 +18,11 @@ import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -104,7 +106,7 @@ public class VisionIntentService extends IntentService {
                         String packageName = getPackageName();
                         visionRequest.getRequestHeaders().set("X-Android-Package", packageName);
 
-                        String sig = PackageManagerUtils.getSignature(getPackageManager(), packageName);
+                        //String sig = getPackageManager(), getPackageName();
 
                         visionRequest.getRequestHeaders().set("X-Android-Cert", sig);
                     }
@@ -136,7 +138,7 @@ public class VisionIntentService extends IntentService {
             annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
                 Feature labelDetection = new Feature();
                 labelDetection.setType("LABEL_DETECTION");
-                labelDetection.setMaxResults(MAX_LABEL_RESULTS);
+                labelDetection.setMaxResults(10);
                 add(labelDetection);
             }});
 

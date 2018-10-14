@@ -15,4 +15,14 @@ public class GroceryItem {
         this.price = price;
         this.quantity=quantity;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.name.equals(((GroceryItem)obj).name);
+    }
+
+    public GroceryItem incrementQuantity(){
+        quantity++;
+        return this;
+    }
 }

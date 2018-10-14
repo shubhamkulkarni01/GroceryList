@@ -157,7 +157,9 @@ ResultReceiver resultReceiver;
         }
         if(result == 1){
             Log.d("dsjfkdls", "message from descriptionselect");
-            list.add(new GroceryItem(bundle.getString(""), 0.0, 1));
+            GroceryItem item = new GroceryItem(bundle.getString(""), 0.0, 1);
+            if(list.contains(item))list.update(item);
+            else list.add(item);
             mAdapter.notifyDataSetChanged();
         }
     }

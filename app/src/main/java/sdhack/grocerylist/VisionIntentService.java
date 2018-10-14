@@ -3,6 +3,8 @@ package sdhack.grocerylist;
 import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -15,6 +17,7 @@ import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
@@ -42,14 +45,14 @@ public class VisionIntentService extends IntentService{
 
     private Bitmap bitmap = null;
 
-    Communicator m;
+    ResultReceiver m;
 
     @Override
     protected void onHandleIntent( Intent intent) {
         Log.i("IMAGE", "an image has arrived");
 
         bitmap = intent.getParcelableExtra("IMAGE");
-        m = (Communicator)intent.getSerializableExtra("reply");
+        m = (ResultReceiver)intent.getParcelableExtra("reply");
         callCloudVision(bitmap);
 
         /*
@@ -148,7 +151,13 @@ public class VisionIntentService extends IntentService{
             try {
                 Log.d(TAG, "created Cloud Vision request object, sending request");
                 response = prepareAnnotationRequest(bitmap).execute();
-
+                ArrayList<String> description = new ArrayList<>();
+                for (int i = 0; i < response.getResponses().size(); i++)
+                    for (EntityAnnotation annotation : response.getResponses().get(0).getLabelAnnotations())
+                        description.add(annotation.getDescription());
+                Bundle b = new Bundle();
+                b.putSerializable("",description);
+                m.send(0, b);
                 Log.d(TAG, response.getResponses().get(0).getLabelAnnotations().toString());
                 return "Success";
             } catch (GoogleJsonResponseException e) {

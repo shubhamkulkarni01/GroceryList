@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import org.json.JSONArray;
 
@@ -29,7 +28,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements Serializable, Communicator {
+public class MainActivity extends AppCompatActivity implements Serializable, MyResultReceiver.Receiver {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -39,11 +38,13 @@ public class MainActivity extends AppCompatActivity implements Serializable, Com
     private GroceryList list;
 
     private ArrayList<String> description = null;
-
+ResultReceiver resultReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = buildLists();
+        resultReceiver = new MyResultReceiver(new Handler());
+        ((MyResultReceiver) resultReceiver).setReceiver(this);
         Log.i("class", "mainactivity");
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.my_recycler_view);
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Com
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             Intent intent = new Intent(this, VisionIntentService.class);
             intent.putExtra("IMAGE", imageBitmap);
-            intent.putExtra("reply", this);
+            intent.putExtra("reply", resultReceiver);
+            Log.d("sdkljflkdsjflkds", resultReceiver.toString());
             Log.d("starting service", "starting service!!!");
             startService(intent);
         }
@@ -142,22 +144,21 @@ public class MainActivity extends AppCompatActivity implements Serializable, Com
         return json_trial;
     }
 
-    public void sendResult(Object o, int result){
+
+    @Override
+    public void onReceiveResult(int result, Bundle bundle) {
         if(result == 0) {
-            BatchAnnotateImagesResponse response = (BatchAnnotateImagesResponse) o;
-            description = new ArrayList<>();
-            for (int i = 0; i < response.getResponses().size(); i++)
-                for (EntityAnnotation annotation : response.getResponses().get(0).getLabelAnnotations())
-                    description.add(annotation.getDescription());
+            description= (ArrayList<String>) bundle.getSerializable("");
+            Log.d("it worked", description.toString());
             Intent intent = new Intent(this, DescriptionSelectActivity.class);
             intent.putExtra("array",description);
-            intent.putExtra("reply", this);
+            intent.putExtra("reply", resultReceiver);
+            startActivity(intent);
         }
         if(result == 1){
+            Log.d("dsjfkdls", "message from descriptionselect");
+            list.add(new GroceryItem(bundle.getString(""), 0.0, 1));
             mAdapter.notifyDataSetChanged();
         }
     }
-}
-interface Communicator{
-    public void sendResult(Object o, int result);
 }

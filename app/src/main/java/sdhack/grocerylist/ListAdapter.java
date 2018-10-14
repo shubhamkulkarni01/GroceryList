@@ -32,8 +32,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     public void onBindViewHolder(@NonNull ListViewHolder viewHolder, int i) {
         viewHolder.checkbox.setChecked(false);
         viewHolder.name.setText(list.get(i).name);
-        viewHolder.quantity.setText(""+list.get(i).quantity);
-        viewHolder.price.setText(""+list.get(i).price);
+        viewHolder.quantity.setText("Quantity: "+list.get(i).quantity);
+        viewHolder.price.setText(list.get(i).price==0d?"$"+list.get(i).price:"No price info");
         if(list.get(i).previousPurchase != null) viewHolder.date.setText(list.get(i).previousPurchase.toString());
     }
 

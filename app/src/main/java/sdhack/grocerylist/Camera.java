@@ -1,8 +1,10 @@
 package sdhack.grocerylist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -62,6 +64,9 @@ public class Camera extends AppCompatActivity implements View.OnClickListener, C
     @Override
     public void onImage(CameraKitView cameraKitView, byte[] bytes) {
         // Create a bitmap
-
+        Log.d("Took a picture", "WE JUST TOOK A PICTURE");
+        Intent intent = new Intent(this, VisionIntentService.class);
+        intent.putExtra("IMAGE", bytes);
+        startService(intent);
     }
 }

@@ -46,6 +46,7 @@ public class VisionIntentService extends IntentService{
         byte[] bytes = intent.getByteArrayExtra("IMAGE");
         Bitmap result = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         callCloudVision(result);
+
         /*
         try {
             URL serverUrl = new URL(TARGET_URL + API_KEY);
@@ -142,6 +143,7 @@ public class VisionIntentService extends IntentService{
             try {
                 Log.d(TAG, "created Cloud Vision request object, sending request");
                 response = prepareAnnotationRequest(bitmap).execute();
+                Log.d(TAG, response.getResponses().get(0).getLabelAnnotations().toString());
                 return "Success";
             } catch (GoogleJsonResponseException e) {
                 Log.d(TAG, "failed to make API request because " + e.getContent());

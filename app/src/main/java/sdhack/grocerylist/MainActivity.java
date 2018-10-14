@@ -29,19 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ListInfo[] lists = buildLists();
-        if(lists.length==0){
-            setContentView(R.layout.activity_main_blank);
-            fab = findViewById(R.id.fab);
-
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), ListActivity.class);
-                    startActivity(intent);
-                }});
-            return;
-        }
+        GroceryList lists = buildLists();
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.my_recycler_view);
         fab = findViewById(R.id.fab);
@@ -49,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), Camera.class);
                 startActivity(intent);
             }});
 
@@ -61,20 +49,23 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MainAdapter(lists);
+        mAdapter = new ListAdapter(lists);
         mRecyclerView.setAdapter(mAdapter);
     }
-    public ListInfo[] buildLists() {
-        ListInfo[] lists = null;
+
+    public GroceryList buildLists() {
+        GroceryList list = null;
         try {
             JSONArray array = new JSONArray(open(new FileInputStream(new File(getFilesDir(), "GroceryLists.json"))));
-            lists = new ListInfo[array.length()];
+            list = new GroceryList();
+            for(int i = 0; i<array.length(); i++){
+                list.add(new GroceryItem(array.optJSONObject(i).optString("name"), array.optJSONObject(i).optInt("price"), array.optJSONObject(i).optInt("quantity")));
+            }
         }
         catch(FileNotFoundException e){
             e.printStackTrace();
-            lists=new ListInfo[0];
+            list=new GroceryList();
             JSONArray array = new JSONArray();
-            array.put(1000).put(123).put("Hello");
             try{
                 FileOutputStream f = new FileOutputStream(new File(getFilesDir(), "GroceryLists.json"));
                 f.write(array.toString().getBytes());
@@ -87,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         catch(Exception e){
             e.printStackTrace();
         }
-        return lists;
+        return list;
     }
 
     protected String open(InputStream inputStream) {

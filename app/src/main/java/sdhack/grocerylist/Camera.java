@@ -59,7 +59,6 @@ public class Camera extends AppCompatActivity implements View.OnClickListener, C
     @Override
     public void onClick(View v) {
         cameraKitView.captureImage(this);
-        cameraKitView.c
     }
 
     @Override

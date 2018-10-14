@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 
 import org.json.JSONArray;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,8 +28,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity implements Serializable, MyResultReceiver.Receiver {
 
@@ -38,10 +41,16 @@ public class MainActivity extends AppCompatActivity implements Serializable, MyR
     private GroceryList list;
 
     private ArrayList<String> description = null;
-ResultReceiver resultReceiver;
+    ResultReceiver resultReceiver;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
         list = buildLists();
         resultReceiver = new MyResultReceiver(new Handler());
         ((MyResultReceiver) resultReceiver).setReceiver(this);
@@ -156,11 +165,22 @@ ResultReceiver resultReceiver;
             startActivity(intent);
         }
         if(result == 1){
-            Log.d("dsjfkdls", "message from descriptionselect");
-            GroceryItem item = new GroceryItem(bundle.getString(""), 0.0, 1);
+            GroceryItem item = new GroceryItem(bundle.getString(""), getPrice(bundle.getString("")), 1);
             if(list.contains(item))list.update(item);
             else list.add(item);
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    public double getPrice(String name){
+        try {
+            Document document = Jsoup.parse(new URL("https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=" + name), 10000);
+            String string = document.select(".a-spacing-none:contains($)").first().toString();
+            return Double.parseDouble(string.substring(string.indexOf("$")+1, string.indexOf(" ",string.indexOf("$"))));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

@@ -33,7 +33,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         viewHolder.checkbox.setChecked(false);
         viewHolder.name.setText(list.get(i).name);
         viewHolder.quantity.setText("Quantity: "+list.get(i).quantity);
-        viewHolder.price.setText(list.get(i).price==0d?"$"+list.get(i).price:"No price info");
+        viewHolder.price.setText(String.format("$%.2f",+list.get(i).price));
         if(list.get(i).previousPurchase != null) viewHolder.date.setText(list.get(i).previousPurchase.toString());
     }
 

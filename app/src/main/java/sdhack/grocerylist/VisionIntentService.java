@@ -169,7 +169,7 @@ public class VisionIntentService extends IntentService{
         protected void onPostExecute(String result) {
             VisionIntentService activity = mActivityWeakReference;
             if (activity != null && !activity.isFinishing()) {
-                TextView imageDetail = activity.findViewById(R.id.image_details);
+                TextView imageDetail = activity.findViewById(R.id.recycler_view);
                 imageDetail.setText(result);
             }
         }

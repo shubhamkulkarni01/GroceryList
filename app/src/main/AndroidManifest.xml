@@ -23,6 +23,9 @@
         <activity android:name=".Camera">
 
         </activity>
+        <activity android:name=".ListActivity">
+            
+        </activity>
     </application>
 
 </manifest>

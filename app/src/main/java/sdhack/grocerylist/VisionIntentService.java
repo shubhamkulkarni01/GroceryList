@@ -42,6 +42,7 @@ public class VisionIntentService extends IntentService {
             "https://vision.googleapis.com/v1/images:annotate?";
     private static final String API_KEY =
             "key=AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0";
+    private static final String CLOUD_VISION_API_KEY = BuildConfig."AIzaSyBjck0TMRVFDG0AxoI5Gh1n1EmRr7jRZG0";
 
     @Override
     protected void onHandleIntent( Intent intent) {
@@ -49,7 +50,7 @@ public class VisionIntentService extends IntentService {
         try {
             URL serverUrl = new URL(TARGET_URL + API_KEY);
             URLConnection urlConnection = serverUrl.openConnection();
-            HttpURLConnection httpConnection = (HttpURLConnection)urlConnection;
+            HttpURLConnection httpConnection = (HttpURLConnection) urlConnection;
 
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Type", "application/json");
@@ -59,8 +60,8 @@ public class VisionIntentService extends IntentService {
                     OutputStreamWriter(httpConnection.getOutputStream()));
             httpRequestBodyWriter.write
                     ("{\"requests\":  [{ \"features\":  [ {\"type\": \"LABEL_DETECTION\""
-                            +"}], \"image\": {\"source\": { \"gcsImageUri\":"
-                            +" \"gs://vision-sample-images/4_Kittens.jpg\"}}}]}");
+                            + "}], \"image\": {\"source\": { \"gcsImageUri\":"
+                            + " \"gs://vision-sample-images/4_Kittens.jpg\"}}}]}");
             httpRequestBodyWriter.close();
 
             String response = httpConnection.getResponseMessage();
@@ -70,7 +71,7 @@ public class VisionIntentService extends IntentService {
                 return;
             }
 
-            Scanner httpResponseScanner = new Scanner (httpConnection.getInputStream());
+            Scanner httpResponseScanner = new Scanner(httpConnection.getInputStream());
             String resp = "";
             while (httpResponseScanner.hasNext()) {
                 String line = httpResponseScanner.nextLine();
@@ -93,24 +94,7 @@ public class VisionIntentService extends IntentService {
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
         VisionRequestInitializer requestInitializer =
-                new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
-                    /**
-                     * We override this so we can inject important identifying fields into the HTTP
-                     * headers. This enables use of a restricted cloud platform API key.
-                     */
-                    @Override
-                    protected void initializeVisionRequest(VisionRequest<?> visionRequest)
-                            throws IOException {
-                        super.initializeVisionRequest(visionRequest);
-
-                        String packageName = getPackageName();
-                        visionRequest.getRequestHeaders().set("X-Android-Package", packageName);
-
-                        //String sig = getPackageManager(), getPackageName();
-
-                        visionRequest.getRequestHeaders().set("X-Android-Cert", sig);
-                    }
-                };
+                new VisionRequestInitializer(CLOUD_VISION_API_KEY);
 
         Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
         builder.setVisionRequestInitializer(requestInitializer);

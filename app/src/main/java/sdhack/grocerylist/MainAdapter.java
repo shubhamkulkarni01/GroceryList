@@ -19,7 +19,7 @@ public class MainAdapter extends RecyclerView.Adapter <MainAdapter.MyViewHolder>
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.grocery_list_overview, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.grocery_list_overview, viewGroup, false);
         return new MyViewHolder(view);
     }
 

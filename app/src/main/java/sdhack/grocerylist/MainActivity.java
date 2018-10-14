@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -28,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ListInfo[] lists = buildLists();
+        if(lists.length==0){
+            setContentView(R.layout.activity_main_blank);
+            return;
+        }
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.my_recycler_view);
         fab = findViewById(R.id.fab);
@@ -47,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        ListInfo[] lists = buildLists();
         mAdapter = new MainAdapter(lists);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -60,6 +65,15 @@ public class MainActivity extends AppCompatActivity {
         catch(FileNotFoundException e){
             e.printStackTrace();
             lists=new ListInfo[0];
+            JSONArray array = new JSONArray();
+            try{
+                FileOutputStream f = new FileOutputStream(new File(getFilesDir(), "GroceryLists.json"));
+                f.write(array.toString().getBytes());
+                f.close();
+            }
+            catch (Exception e1){
+                e1.printStackTrace();
+            }
         }
         catch(Exception e){
             e.printStackTrace();

@@ -3,13 +3,16 @@ package sdhack.grocerylist;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.camerakit.CameraKit;
 import com.camerakit.CameraKitView;
 
-public class Camera extends AppCompatActivity {
+public class Camera extends AppCompatActivity implements View.OnClickListener {
 
     private CameraKitView cameraKitView;
+    private ImageButton button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +20,8 @@ public class Camera extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         cameraKitView = findViewById(R.id.camera);
         cameraKitView.setFocus(CameraKit.FOCUS_CONTINUOUS);
-
+        button = findViewById(R.id.imageButton);
+        button.setOnClickListener(this);
     }
 
         @Override
@@ -50,4 +54,8 @@ public class Camera extends AppCompatActivity {
             cameraKitView.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+    @Override
+    public void onClick(View v) {
+        cameraKitView.
     }
+}

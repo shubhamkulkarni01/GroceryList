@@ -32,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
         ListInfo[] lists = buildLists();
         if(lists.length==0){
             setContentView(R.layout.activity_main_blank);
+            fab = findViewById(R.id.fab);
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                    startActivity(intent);
+                }});
             return;
         }
         setContentView(R.layout.activity_main);
@@ -66,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             lists=new ListInfo[0];
             JSONArray array = new JSONArray();
+            array.put(1000).put(123).put("Hello");
             try{
                 FileOutputStream f = new FileOutputStream(new File(getFilesDir(), "GroceryLists.json"));
                 f.write(array.toString().getBytes());
